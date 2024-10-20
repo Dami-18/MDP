@@ -3,7 +3,7 @@ import gridworld as gw
 import numpy as np
 import mdpstate
 
-def value_iteration(maze,gamma=0.9,transition_prob=0.8,rewards=None):
+def value_iteration(maze,gamma=0.9,transition_prob=0.8,rewards=None, threshold=1e-6):
     rows = len(maze)
     cols = len(maze[0])
     actions = ['up','left','down','right'] # 0 1 2 3
@@ -18,6 +18,7 @@ def value_iteration(maze,gamma=0.9,transition_prob=0.8,rewards=None):
     # until all values are stable
     while is_value_changed:
         is_value_changed = False
+        temp_matrix = np.copy(val)
         for i in range(len(maze)):
             for j in range(len(maze[i])):
                 all_actions = [] # store values from all actions
@@ -32,11 +33,20 @@ def value_iteration(maze,gamma=0.9,transition_prob=0.8,rewards=None):
                             value = value + ((1.0-transition_prob) / 2)*(rewards[i][j] + gamma*val[neighbors[dir][1][0]][neighbors[dir][1][1]])
                     all_actions.append(value)
 
-                v = max(all_actions)
+                temp_matrix[i][j] = max(all_actions)
 
-                if v != val[i][j]: # continue until convergence
-                    is_value_changed = True
-                    val[i][j] = v
+        delta = np.max(np.abs(val - temp_matrix))
+        if delta > threshold:  # If the change is significant, continue
+            is_value_changed = True
+        
+        val = temp_matrix  
+                # Update the value matrix
+                # if v != val[i][j]: # continue until convergence
+                #     is_value_changed = True
+                #     val[i][j] = v
+        
+        if not is_value_changed:
+            break
 
         iterations += 1
     return val, iterations
