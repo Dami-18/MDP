@@ -7,11 +7,10 @@ def isWall(num):
     else:
         return True
     
-
-    
 def get_neighbours(x,y,maze): # find valid grid neighbours
     nbs = []
-    rows, cols = maze.shape
+    rows = len(maze)
+    cols = len(maze[0])
     if x>1 and (not isWall(maze[x-1][y])):
         nbs.append((1,(x-1,y))) # puts 1 if up is a valid neighbour
     else:
@@ -32,10 +31,11 @@ def get_neighbours(x,y,maze): # find valid grid neighbours
     return nbs # return array of tuples of valid neighbours
 
 def is_cell_inside(x,y,maze): # checks if a cell is inside grid or not
-    rows, cols = maze.shape
+    rows = len(maze)
+    cols = len(maze[0])
     return (x>=0 and x<rows) and (y>=0 and y<cols)
 
-def pointInGrid(x,y,direction): # returns the neighbours of a given point
+def neighborPoint(x,y,direction): # returns the neighbours of a given point
     if(direction==0):
         return (x-1,y)
     elif (direction==1):
