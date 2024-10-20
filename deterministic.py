@@ -64,7 +64,7 @@ def main():
 
     # Assign rewards
     rewards = np.zeros((len(maze), len(maze[0])))
-    rewards[0][8] = 1  # Reward for goal state
+    rewards[0][8] = 100  # Reward for goal state
     
     value_iteration_matrix, iterations = value_iteration(maze, rewards=rewards)
     
